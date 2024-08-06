@@ -1,24 +1,69 @@
 package tetris
 
-import (
-	"sort"
-)
+type Packer struct{}
 
-type Box struct {
-	Width, Height, Depth int
-	X, Y, Z              int
+func NewPacker() *Packer {
+	return &Packer{}
 }
 
 type Bin struct {
-	Width, Height, Depth, MaxWeight int
+	id        string
+	width     float64
+	height    float64
+	depth     float64
+	maxWeight float64
+	volume    float64
+
+	// items currently in the bin
+	items []*Item
+
+	// longest side of the bin
+	maxLength float64
+
+	// total volume of items in the bin
+	itemsVolume float64
+
+	// total weight of items in the bin
+	itemsWeight float64
 }
 
-// Function to sort boxes by volume (width * height * depth) in descending order
-func SortBoxesByVolume(boxes []Box) {
-	sort.Slice(boxes, func(i, j int) bool {
-		vol1 := boxes[i].Width * boxes[i].Height * boxes[i].Depth
-		vol2 := boxes[j].Width * boxes[j].Height * boxes[j].Depth
-		return vol1 > vol2
-	})
+type Item struct {
+	id     string
+	width  float64
+	height float64
+	depth  float64
+	weight float64
+	volume float64
+
+	maxLength float64
+	rotation  Rotation
+	position  Position
 }
 
+type Rotation int
+
+const (
+	WHD = iota
+	WDH
+	HWD
+	HDW
+	DHW
+	DWH
+)
+
+var rotationName = map[Rotation]string{
+	WHD: "WHD",
+	WDH: "WDH",
+	HWD: "HWD",
+	HDW: "HDW",
+	DHW: "DHW",
+	DWH: "DWH",
+}
+
+func (rotation Rotation) String() string {
+	return rotationName[rotation]
+}
+
+type Position struct {
+	x, y, z float64
+}
