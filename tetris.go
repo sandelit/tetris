@@ -2,10 +2,6 @@ package tetris
 
 type Packer struct{}
 
-func NewPacker() *Packer {
-	return &Packer{}
-}
-
 type Bin struct {
 	id        string
 	width     float64
@@ -67,3 +63,14 @@ func (rotation Rotation) String() string {
 type Position struct {
 	x, y, z float64
 }
+
+func NewPacker() *Packer {
+	return &Packer{}
+}
+
+
+
+
+
+
+  
