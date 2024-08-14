@@ -9,11 +9,16 @@ import (
 
 func TestNextFitDecreasingHeight(t *testing.T) {
 	packer := NewPacker()
-
 	bin1 := NewBin(uuid.NewString(), 10.0, 10.0)
 	item1 := NewItem(uuid.NewString(), 10.0, 10.0)
 	bin1WithItems := bin1
 	bin1WithItems.Items = append(bin1WithItems.Items, item1)
+
+	bin2 := NewBin(uuid.NewString(), 10.0, 10.0)
+	item2 := NewItem(uuid.NewString(), 10.0, 10.0)
+	item3 := NewItem(uuid.NewString(), 10.0, 10.0)
+	bin2WithItems := bin2
+	bin2WithItems.Items = append(bin2WithItems.Items, item2)
 
 	tests := []struct {
 		name     string
@@ -28,6 +33,18 @@ func TestNextFitDecreasingHeight(t *testing.T) {
 			expected: BinPackResult{
 				Bins:           []*Bin{bin1WithItems},
 				RemainingItems: []*Item{},
+				Efficiency:     1.0,
+				TotalArea:      100.0,
+				UsedArea:       100.0,
+			},
+		},
+		{
+			name:  "Items fit in bin",
+			bins:  []*Bin{bin2},
+			items: []*Item{item2, item3},
+			expected: BinPackResult{
+				Bins:           []*Bin{bin2WithItems},
+				RemainingItems: []*Item{item3},
 				Efficiency:     1.0,
 				TotalArea:      100.0,
 				UsedArea:       100.0,
@@ -62,10 +79,8 @@ func compareBinPackResults(t *testing.T, got, want BinPackResult) {
 		if gotBin.Height != wantBin.Height {
 			t.Errorf("Bin[%d] height mismatch: got %f, want %f", i, gotBin.Height, wantBin.Height)
 		}
-		// Compare items in the bin...
 	}
 
-	// Compare other fields...
 	if !reflect.DeepEqual(got.RemainingItems, want.RemainingItems) {
 		t.Errorf("RemainingItems mismatch: got %#v, want %#v", got.RemainingItems, want.RemainingItems)
 	}
